@@ -7,12 +7,6 @@ jobs:
 
     runs-on: ubuntu-18.04
 
-    services:
-      selenium:
-        image: selenium/standalone-chrome
-        options: --health-cmd '/opt/bin/check-grid.sh'
-        ports:
-          - 4444:4444
     steps:
       - uses: actions/checkout@v1
 
@@ -67,15 +61,18 @@ jobs:
 
       - name: Run PHP webserver
         run: |
-          export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
-          sed -i -e "s/LOCAL_DOMAIN/$APP_IP:8888/" Tests/Acceptance/_envs/github-actions.yml
-          php -S 0.0.0.0:8888 -t .Build/public/ &> php.log.txt &
+          php -S 127.0.0.1 -t .Build/public/ &> php.log.txt &
           sleep 2;
 
       - name: Test PHP webserver and initialize TYPO3 cache
         run: |
-          export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
-          curl "$APP_IP:8888"
+          curl http://127.0.0.1/
+
+      - name: Start Selenium standalone
+        run: |
+          echo $SELENIUM_JAR_PATH
+          java -Djava.awt.headless=true -jar $SELENIUM_JAR_PATH &
+          sleep 1;
 
       - name: Codeception Acceptance Tests
         run: .Build/bin/codecept run acceptance --env=github-actions -c Tests/Build/AcceptanceTests.yml
