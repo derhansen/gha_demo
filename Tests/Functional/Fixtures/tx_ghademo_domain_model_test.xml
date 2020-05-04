@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <pages>
+        <uid>1</uid>
+        <pid>0</pid>
+    </pages>
+    <tx_ghademo_domain_model_test>
+        <uid>1</uid>
+        <pid>1</pid>
+        <title>First test on Page UID 1</title>
+    </tx_ghademo_domain_model_test>
+    <tx_ghademo_domain_model_test>
+        <uid>2</uid>
+        <pid>1</pid>
+        <title>Second test on Page UID 1</title>
+    </tx_ghademo_domain_model_test>
+</dataset>

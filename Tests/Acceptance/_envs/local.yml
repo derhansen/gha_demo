@@ -1,0 +1,12 @@
+modules:
+  config:
+      WebDriver:
+        url: http://ghademo.typo3.local/
+      Db:
+        dsn: 'mysql:host=localhost'
+        user: '%DB_USERNAME%'
+        password: '%DB_PASSWORD%'
+        initial_queries:
+          - 'CREATE DATABASE IF NOT EXISTS typo3_ghademo;'
+          - 'USE typo3_ghademo;'
+          - 'SET NAMES utf8;'

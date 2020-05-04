@@ -1,0 +1,95 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    services:
+      selenium:
+        image: selenium/standalone-chrome
+        options: --health-cmd '/opt/bin/check-grid.sh'
+        ports:
+          - 4444:4444
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set up PHP Version
+        run: |
+          sudo update-alternatives --set php /usr/bin/php7.3
+          php -v
+
+      - name: Start MySQL
+        run: sudo /etc/init.d/mysql start
+
+      - name: Update Composer
+        run: |
+          sudo composer self-update
+          composer --version
+
+      # Directory permissions for .composer are wrong, so we remove the complete directory
+      - name: Delete .composer directory
+        run: |
+          sudo rm -rf ~/.composer
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache
+          key: dependencies-composer-${{ hashFiles('composer.json') }}
+
+      - name: Install composer dependencies
+        run: |
+          composer install --no-progress
+
+      - name: Unit tests
+        run: .Build/bin/phpunit --colors -c Tests/Build/UnitTests.xml
+
+      - name: Functional tests
+        run: |
+          sudo /etc/init.d/mysql start
+          export typo3DatabaseName="typo3";
+          export typo3DatabaseHost="127.0.0.1";
+          export typo3DatabaseUsername="root";
+          export typo3DatabasePassword="root";
+          .Build/bin/phpunit --colors -c Tests/Build/FunctionalTests.xml
+
+      - name: Initialize TYPO3 environment
+        run: |
+          cp -R Tests/Acceptance/_data/typo3conf .Build/public/
+          cp -R Tests/Acceptance/_data/config .Build/
+          .Build/bin/typo3cms install:generatepackagestates
+
+      - name: Run PHP webserver
+        run: |
+          export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
+          sed -i -e "s/LOCAL_DOMAIN/$APP_IP:8888/" Tests/Acceptance/_envs/github-actions.yml
+          php -S 0.0.0.0:8888 -t .Build/public/ &> php.log.txt &
+          sleep 2;
+
+      - name: Test PHP webserver and initialize TYPO3 cache
+        run: |
+          export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
+          curl "$APP_IP:8888"
+
+      - name: Codeception Acceptance Tests
+        run: .Build/bin/codecept run acceptance --env=github-actions -c Tests/Build/AcceptanceTests.yml
+
+      - name: Upload Codeception output
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeception-results
+          path: Tests/Acceptance/_output/
+
+      - name: Upload PHP log
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: php-log
+          path: php.log.txt

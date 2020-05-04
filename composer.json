@@ -1,0 +1,88 @@
+{
+    "name": "derhansen/gha-demo",
+    "type": "typo3-cms-extension",
+    "description": "TYPO3 CMS Extension to demonstrate test execution on GitHub Actions.",
+    "homepage": "https://github.com/derhansen/gha_demo",
+    "support": {
+        "issues": "https://github.com/derhansen/gha_demo"
+    },
+    "authors": [
+        {
+            "name": "Torben Hansen",
+            "email": "torben@derhansen.com",
+            "homepage": "https://www.derhansen.com",
+            "role": "Developer"
+        }
+    ],
+    "keywords": ["TYPO3 CMS", "GitHub Actions"],
+    "license": [
+        "GPL-2.0-or-later"
+    ],
+    "require": {
+        "typo3/cms-core": "^10.4",
+        "php": ">=7.2"
+    },
+    "require-dev": {
+        "typo3/testing-framework": "^5",
+        "codeception/codeception": "^4.1",
+        "codeception/module-webdriver": "^1.0",
+        "codeception/module-db": "^1.0",
+        "typo3/cms-about": "^10.4",
+        "typo3/cms-adminpanel": "^10.4",
+        "typo3/cms-backend": "^10.4",
+        "typo3/cms-belog": "^10.4",
+        "typo3/cms-beuser": "^10.4",
+        "typo3/cms-dashboard": "^10.4",
+        "typo3/cms-extbase": "^10.4",
+        "typo3/cms-extensionmanager": "^10.4",
+        "typo3/cms-filelist": "^10.4",
+        "typo3/cms-fluid": "^10.4",
+        "typo3/cms-fluid-styled-content": "^10.4",
+        "typo3/cms-form": "^10.4",
+        "typo3/cms-frontend": "^10.4",
+        "typo3/cms-impexp": "^10.4",
+        "typo3/cms-info": "^10.4",
+        "typo3/cms-install": "^10.4",
+        "typo3/cms-lowlevel": "^10.4",
+        "typo3/cms-opendocs": "^10.4",
+        "typo3/cms-recordlist": "^10.4",
+        "typo3/cms-recycler": "^10.4",
+        "typo3/cms-redirects": "^10.4",
+        "typo3/cms-reports": "^10.4",
+        "typo3/cms-rte-ckeditor": "^10.4",
+        "typo3/cms-seo": "^10.4",
+        "typo3/cms-setup": "^10.4",
+        "typo3/cms-tstemplate": "^10.4",
+        "typo3/cms-viewpage": "^10.4",
+        "helhum/typo3-console": "^6.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Derhansen\\GhaDemo\\": "Classes"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Derhansen\\GhaDemo\\Tests\\": "Tests"
+        }
+    },
+    "replace": {
+        "typo3-ter/gha-demo": "self.version"
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "gha_demo",
+            "app-dir": ".Build",
+            "web-dir": ".Build/public"
+        }
+    },
+    "config": {
+        "vendor-dir": ".Build/vendor",
+        "bin-dir": ".Build/bin"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "TYPO3\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
+        ]
+    }
+}
