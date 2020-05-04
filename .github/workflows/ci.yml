@@ -61,12 +61,15 @@ jobs:
 
       - name: Run PHP webserver
         run: |
-          php -S 127.0.0.1 -t .Build/public/ &> php.log.txt &
+          export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
+          sed -i -e "s/LOCAL_DOMAIN/$APP_IP:8888/" Tests/Acceptance/_envs/github-actions.yml
+          php -S 0.0.0.0:8888 -t .Build/public/ &> php.log.txt &
           sleep 2;
 
       - name: Test PHP webserver and initialize TYPO3 cache
         run: |
-          curl http://127.0.0.1/
+          export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
+          curl "$APP_IP:8888"
 
       - name: Start Selenium standalone
         run: |
