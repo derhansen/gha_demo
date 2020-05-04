@@ -46,7 +46,6 @@ jobs:
 
       - name: Functional tests
         run: |
-          sudo /etc/init.d/mysql start
           export typo3DatabaseName="typo3";
           export typo3DatabaseHost="127.0.0.1";
           export typo3DatabaseUsername="root";
