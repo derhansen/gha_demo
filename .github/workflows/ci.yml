@@ -75,7 +75,7 @@ jobs:
         run: |
           echo $SELENIUM_JAR_PATH
           java -Djava.awt.headless=true -jar $SELENIUM_JAR_PATH &
-          sleep 1;
+          sleep 3;
 
       - name: Codeception Acceptance Tests
         run: .Build/bin/codecept run acceptance --env=github-actions -c Tests/Build/AcceptanceTests.yml
