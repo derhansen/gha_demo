@@ -20,7 +20,7 @@ jobs:
 
       - name: Update Composer
         run: |
-          composer self-update
+          sudo composer self-update
           composer --version
 
       - name: Validate composer.json and composer.lock
