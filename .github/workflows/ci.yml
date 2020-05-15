@@ -72,10 +72,10 @@ jobs:
           sleep 3;
 
       - name: Codeception Acceptance Tests
-        run: .Build/bin/codecept run acceptance --env=github-actions -c Tests/Build/AcceptanceTests.yml
+        run: .Build/bin/codecept run acceptance --env=github-actions -c Tests/Build/AcceptanceTests.yml --html
 
       - name: Upload Codeception output
-        if: ${{ failure() }}
+        if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
           name: codeception-results
