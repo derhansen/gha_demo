@@ -23,6 +23,12 @@ jobs:
           sudo composer self-update
           composer --version
 
+      # Directory permissions for .composer are wrong, so we remove the complete directory
+      # https://github.com/actions/virtual-environments/issues/824
+      - name: Delete .composer directory
+        run: |
+          sudo rm -rf ~/.composer
+
       - name: Validate composer.json and composer.lock
         run: composer validate
 
