@@ -14,14 +14,10 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 7.3
-
+          tools: composer:v2
+          
       - name: Start MySQL
         run: sudo /etc/init.d/mysql start
-
-      - name: Update Composer
-        run: |
-          sudo composer self-update
-          composer --version
 
       # Directory permissions for .composer are wrong, so we remove the complete directory
       # https://github.com/actions/virtual-environments/issues/824
